@@ -6,10 +6,11 @@ from utils import  load_hparams,save_hparams,get_time
 from hparams import hparams, hparams_debug_string
 import infolog
 import tensorflow as tf
+import numpy as np
 
 from data_helpers import DataHelper
 
-log = infolog.Log
+log = infolog.Log()
 tf.logging.set_verbosity(tf.logging.ERROR)
 
 def read_data(file_path):
@@ -43,6 +44,7 @@ class Train:
         self.config.ftest = os.path.abspath(os.path.join(self.config.data_paths,'test.txt'))
 
         if not os.path.exists(self.config.ftrain) or not os.path.exists(self.config.fval) or not os.path.exists(self.config.ftest):
+            print('Data not present!!!')
             exit(0)
 
         dataset_desc = 'NER'
@@ -52,7 +54,6 @@ class Train:
         for path in [self.config.log_dir, self.config.model_dir]:
             if not os.path.exists(path):
                 os.makedirs(path)
-
         save_hparams(self.config.model_dir, hparams)
         copy_file("hparams.py", os.path.join(self.config.model_dir, "hparams.py"))
 
@@ -62,7 +63,7 @@ class Train:
         self.test_tokens,self.test_tags = read_data(self.config.ftest)
 
     def train(self):
-        checkpoint_path = os.path.join(self.config.log_dir, 'model.ckpt')
+        checkpoint_path = os.path.join(self.config.model_dir, 'model.ckpt')
         data_dirs = self.config.data_paths
         data_helper = DataHelper(self.train_tokens, self.validation_tokens, self.train_tags)
 
@@ -82,8 +83,9 @@ class Train:
         with tf.variable_scope('model'):
             model=BiLSTMModel()
             model.init()
-            train_vars=model.build_layers(hparams=hparams,vocabulary_size=data_helper.gettokencount(),
+            train_vars=model.build_layers(hparams=hparams,vocabulary_size=data_helper.gettokencount(),n_chars=None,
                                           n_tags=data_helper.gettagcount())
+            model.compute_predictions()
             model.compute_loss(n_tags=data_helper.gettagcount(), PAD_index=data_helper.word2idx('<PAD>'))
             model.perform_optimization(global_step)
             train_stat = model.add_stats()
@@ -96,7 +98,7 @@ class Train:
                 sess.run(tf.global_variables_initializer())
 
                 start_step = sess.run(global_step)
-                log.log('-' * 20 + 'Starting new training' + '-' * 20)
+                log.log('-' * 20 + ' Starting new training ' + '-' * 20)
                 learning_rate = self.config.learning_rate
 
                 for epoch in range(self.config.n_epochs):
@@ -105,11 +107,11 @@ class Train:
                     data_helper.eval_conll(model,sess,self.train_tokens,self.train_tags,short_report=True)
 
                     for x_batch,y_batch,lengths in data_helper.batches_generator(self.config.batch_size,
-                                                                                 self.train_tokens,self.train_tags):
-                        step,loss,_ = model.train_on_batch(sess,step,x_batch,None,y_batch,lengths,
-                                                           learning_rate,self.config.dropout_keep_probability)
+                                                                                 self.train_tokens, self.train_tags):
+                        step,loss = model.train_on_batch(sess, global_step, x_batch, None, y_batch, lengths,
+                                                           learning_rate, self.config.dropout_keep_probability)
                         if step % 100 == 0:
-                            log.log('[Step : %d] loss : %f' % (step,loss))
+                            log.log('[Step : %d] loss : %f' % (step, loss))
 
                     learning_rate = learning_rate/self.config.learning_rate_decay
 
@@ -122,9 +124,10 @@ class Train:
                         data_helper.eval_conll(model,sess,self.validation_tokens,self.validation_tags,short_report=True)
 
             except Exception as e:
-                log.log('Exitin due to exception : [%e]!!!' % e)
+                log.log('Exitin due to exception : [%s]!!!' % e)
                 traceback.print_exc()
-
+        log.log('-' * 20 + ' Training completed! ' + '-' * 20)
+        log.close()
         return
 
     def __init__(self):
@@ -134,13 +137,13 @@ class Train:
         parser.add_argument('--data_paths', required=True)
 
         parser.add_argument('--batch_size', default=32)
-        parser.add_argument('--n_epochs', default=4)
+        parser.add_argument('--n_epochs', default=45)
         parser.add_argument('--learning_rate', default=0.005)
         parser.add_argument('--learning_rate_decay', default=np.sqrt(2.0))
         parser.add_argument('--dropout_keep_probability', default=0.9)
-        parser.add_argument('--summary_interval', type=int, default=100)
-        parser.add_argument('--test_interval', type=int, default=500)
-        parser.add_argument('--checkpoint_interval', type=int, default=2000)
+        parser.add_argument('--summary_interval', type=int, default=10)
+        parser.add_argument('--test_interval', type=int, default=15)
+        parser.add_argument('--checkpoint_interval', type=int, default=20)
 
         self.config = parser.parse_args()
         self.prepare_dirs(hparams=hparams)
@@ -148,7 +151,7 @@ class Train:
         log.init(log_path)
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
     train = Train()
     train.prepare_data()
     train.train()

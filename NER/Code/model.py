@@ -44,7 +44,7 @@ class BiLSTMModel:
 
             (rnn_output_fw, rnn_output_bw), _ =  tf.nn.bidirectional_dynamic_rnn(cell_fw=forward_cell,
                                                                                  cell_bw=backward_cell,
-                                                                                 inputs=self.word_batch,
+                                                                                 inputs=word_embedding,
                                                                                  sequence_length=self.lengths,
                                                                                  dtype=tf.float32)
             rnn_output = tf.concat([rnn_output_fw, rnn_output_bw], axis=2)
@@ -88,10 +88,10 @@ class BiLSTMModel:
                      self.lengths: lengths}
 
         step,loss,_ = session.run([step, self.loss, self.train_op], feed_dict=feed_dict)
+        return step,loss
 
     def predict_for_batch(self, session, words, chars, lengths):
         predictions = session.run(self.predictions, feed_dict={self.word_batch: words,
-                                                               self.char_batch:chars,
                                                                self.lengths: lengths})
 
         return predictions
@@ -99,16 +99,14 @@ class BiLSTMModel:
     def add_stats(self, scope_name='train'):
         with tf.variable_scope(scope_name) as scope:
             summaries = [
-                tf.summary.scalar('loss_mel', model.mel_loss),
-                tf.summary.scalar('loss_linear', model.linear_loss),
-                tf.summary.scalar('loss', model.loss_without_coeff),
+                tf.summary.scalar('loss_mel', self.loss)
             ]
 
             if scope_name == 'train':
-                gradient_norms = [tf.norm(grad) for grad in model.gradients if grad is not None]
+                gradient_norms = [tf.norm(grad) for grad,_ in self.grads_and_vars if self.grads_and_vars is not None]
 
                 summaries.extend([
-                    tf.summary.scalar('learning_rate', model.learning_rate),
+                    tf.summary.scalar('learning_rate', self.learning_rate_ph),
                     tf.summary.scalar('max_gradient_norm', tf.reduce_max(gradient_norms)),
                 ])
         return tf.summary.merge(summaries)

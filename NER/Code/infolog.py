@@ -1,7 +1,12 @@
 from datetime import datetime
 class Log:
+    def __init__(self):
+        self.file = None
+
     def close(self):
-        self.file.close()
+        if self.file is not None:
+            self.file.close()
+        self.file = None
 
     def init(self,filename):
         self.close()

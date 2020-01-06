@@ -93,7 +93,7 @@ class DataHelper:
     def predict_tags(self, model, session, token_idxs_batch, lengths):
         """Performs predictions and transforms indices to tokens and tags."""
 
-        tag_idxs_batch = model.predict_for_batch(session, token_idxs_batch, lengths)
+        tag_idxs_batch = model.predict_for_batch(session, token_idxs_batch, None, lengths)
 
         tags_batch, tokens_batch = [], []
         for tag_idxs, token_idxs in zip(tag_idxs_batch, token_idxs_batch):
