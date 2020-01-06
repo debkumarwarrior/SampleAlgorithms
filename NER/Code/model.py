@@ -3,10 +3,10 @@ import numpy as np
 
 class BiLSTMModel:
     def init(self):
-        with tf.variable_scope('placehoders'):
+        with tf.variable_scope('placeholders'):
             # Placeholders for input and ground truth output.
             self.word_batch = tf.placeholder(dtype=tf.int32, shape=[None, None], name='word_batch')
-            self.char_batch = tf.placeholder(dtype=tf.int32, shape=[None, None], name='word_batch')
+            self.char_batch = tf.placeholder(dtype=tf.int32, shape=[None, None], name='char_batch')
             self.ground_truth_tags = tf.placeholder(dtype=tf.int32, shape=[None, None],
                                             name='ground_truth_tags')
             # Placeholder for lengths of the sequences.
@@ -22,40 +22,13 @@ class BiLSTMModel:
 
 
     def build_layers(self, hparams, vocabulary_size, n_chars, n_tags):
-        input_dim = 0
-        inputs = []
         if hparams.word_dim:
-            input_dim += hparams.word_dim
             with tf.variable_scope('word_embedding'):
                 initial_embedding_matrix = np.random.randn(vocabulary_size, hparams.word_dim) / np.sqrt(hparams.word_dim)
                 embedding_matrix_variable = tf.Variable(initial_value=initial_embedding_matrix,
                                                         name='embeddings_matrix',
                                                         dtype=tf.float32)
                 word_embedding = tf.nn.embedding_lookup(params=embedding_matrix_variable, ids=self.word_batch)
-                inputs.append(word_embedding)
-
-        if hparams.char_dim:
-            input_dim += hparams.char_dim
-            with tf.variable_scope('char_embedding'):
-                initial_embedding_matrix = np.random.randn(n_chars, hparams.word_dim) / np.sqrt(hparams.char_dim)
-                embedding_matrix_variable = tf.Variable(initial_value=initial_embedding_matrix,
-                                                        name='embeddings_matrix',
-                                                        dtype=tf.float32)
-                char_embedding = tf.nn.embedding_lookup(params=embedding_matrix_variable, ids=self.char_batch)
-
-                char_lstm_forward = tf.nn.rnn_cell.BasicLSTMCell(num_units=hparams.char_lstm_dim,name='forward_cell')
-                char_lstm_backward = tf.nn.rnn_cell.BasicLSTMCell(num_units=hparams.char_lstm_dim,name='backward_cell')
-
-                char_forward_output = tf.transpose(char_lstm_forward, perm=[1, 0, 2], name='forward_transpose')
-                char_backward_output = tf.transpose(char_lstm_backward, perm=[1, 0, 2], name='backward_transpose')
-
-                inputs.append(char_forward_output)
-                if hparams.char_bidirect:
-                    inputs.append(char_backward_output)
-                    input_dim += hparams.char_dim
-
-        inputs = tf.concat(inputs,axis=1) if len(inputs) != 1 else inputs[0]
-
 
         with tf.variable_scope('encoder'):
             forward_cell = tf.nn.rnn_cell.DropoutWrapper(
@@ -71,13 +44,13 @@ class BiLSTMModel:
 
             (rnn_output_fw, rnn_output_bw), _ =  tf.nn.bidirectional_dynamic_rnn(cell_fw=forward_cell,
                                                                                  cell_bw=backward_cell,
-                                                                                 inputs=inputs,
+                                                                                 inputs=self.word_batch,
                                                                                  sequence_length=self.lengths,
                                                                                  dtype=tf.float32)
             rnn_output = tf.concat([rnn_output_fw, rnn_output_bw], axis=2)
 
             self.logits = tf.layers.dense(rnn_output, n_tags, activation=None)
-
+            return np.sum([np.prod(v.get_shape().as_list()) for v in tf.trainable_variables()])
 
     def compute_predictions(self):
         softmax_output = tf.nn.softmax(self.logits, name='softmax_output')
@@ -94,9 +67,8 @@ class BiLSTMModel:
         self.loss = tf.reduce_mean(mask * loss_tensor)
 
 
-    def perform_optimization(self):
+    def perform_optimization(self, global_step):
         """Specifies the optimizer and train_op for the model."""
-
         # Create an optimizer (tf.train.AdamOptimizer)
         self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate_ph)
         self.grads_and_vars = self.optimizer.compute_gradients(self.loss)
@@ -105,18 +77,17 @@ class BiLSTMModel:
         self.grads_and_vars = [(tf.clip_by_norm(grad, clip_norm), var) for grad, var in
                                                  self.grads_and_vars]
 
-        self.train_op = self.optimizer.apply_gradients(self.grads_and_vars)
+        with tf.control_dependencies(tf.get_collection(tf.GraphKeys.UPDATE_OPS)):
+            self.train_op = self.optimizer.apply_gradients(self.grads_and_vars, global_step=global_step)
 
-
-    def train_on_batch(self, session, words,chars, tags, lengths, learning_rate, dropout_keep_probability):
+    def train_on_batch(self, session, step, words, chars, tags, lengths, learning_rate, dropout_keep_probability):
         feed_dict = {self.word_batch: words,
-                     self.char_batch: chars,
                      self.ground_truth_tags: tags,
                      self.learning_rate_ph: learning_rate,
                      self.dropout_ph: dropout_keep_probability,
                      self.lengths: lengths}
 
-        session.run(self.train_op, feed_dict=feed_dict)
+        step,loss,_ = session.run([step, self.loss, self.train_op], feed_dict=feed_dict)
 
     def predict_for_batch(self, session, words, chars, lengths):
         predictions = session.run(self.predictions, feed_dict={self.word_batch: words,
@@ -125,3 +96,19 @@ class BiLSTMModel:
 
         return predictions
 
+    def add_stats(self, scope_name='train'):
+        with tf.variable_scope(scope_name) as scope:
+            summaries = [
+                tf.summary.scalar('loss_mel', model.mel_loss),
+                tf.summary.scalar('loss_linear', model.linear_loss),
+                tf.summary.scalar('loss', model.loss_without_coeff),
+            ]
+
+            if scope_name == 'train':
+                gradient_norms = [tf.norm(grad) for grad in model.gradients if grad is not None]
+
+                summaries.extend([
+                    tf.summary.scalar('learning_rate', model.learning_rate),
+                    tf.summary.scalar('max_gradient_norm', tf.reduce_max(gradient_norms)),
+                ])
+        return tf.summary.merge(summaries)
