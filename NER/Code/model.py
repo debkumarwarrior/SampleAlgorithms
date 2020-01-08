@@ -6,7 +6,7 @@ class BiLSTMModel:
         with tf.variable_scope('placeholders'):
             # Placeholders for input and ground truth output.
             self.word_batch = tf.placeholder(dtype=tf.int32, shape=[None, None], name='word_batch')
-            self.char_batch = tf.placeholder(dtype=tf.int32, shape=[None, None], name='char_batch')
+            self.cap_feat_batch = tf.placeholder(dtype=tf.int32, shape=[None, None], name='cap_feat_batch')
             self.ground_truth_tags = tf.placeholder(dtype=tf.int32, shape=[None, None],
                                             name='ground_truth_tags')
             # Placeholder for lengths of the sequences.
@@ -21,15 +21,22 @@ class BiLSTMModel:
                                                    name='learning_rate_ph')
 
 
-    def build_layers(self, hparams, vocabulary_size, n_chars, n_tags):
-        if hparams.word_dim:
-            with tf.variable_scope('word_embedding'):
-                initial_embedding_matrix = np.random.randn(vocabulary_size, hparams.word_dim) / np.sqrt(hparams.word_dim)
-                embedding_matrix_variable = tf.Variable(initial_value=initial_embedding_matrix,
-                                                        name='embeddings_matrix',
-                                                        dtype=tf.float32)
-                word_embedding = tf.nn.embedding_lookup(params=embedding_matrix_variable, ids=self.word_batch)
+    def build_layers(self, hparams, vocabulary_size, n_cap_feats, n_tags):
+        with tf.variable_scope('word_embedding'):
+            initial_embedding_matrix = np.random.randn(vocabulary_size, hparams.word_dim) / np.sqrt(hparams.word_dim)
+            embedding_matrix_variable = tf.Variable(initial_value=initial_embedding_matrix,
+                                                    name='embeddings_matrix',
+                                                    dtype=tf.float32)
+            word_embedding = tf.nn.embedding_lookup(params=embedding_matrix_variable, ids=self.word_batch)
 
+        with tf.variable_scope('cap_embedding'):
+            initial_embedding_matrix = np.random.randn(n_cap_feats, hparams.cap_dim) / np.sqrt(hparams.cap_dim)
+            embedding_matrix_variable = tf.Variable(initial_value=initial_embedding_matrix,
+                                                    name='embeddings_matrix',
+                                                    dtype=tf.float32)
+            case_embedding = tf.nn.embedding_lookup(params=embedding_matrix_variable, ids=self.cap_feat_batch)
+
+        inputs = tf.concat([word_embedding, case_embedding],axis=-1,name='inputs')
         with tf.variable_scope('encoder'):
             forward_cell = tf.nn.rnn_cell.DropoutWrapper(
                 cell=tf.nn.rnn_cell.BasicLSTMCell(num_units=hparams.word_lstm_dim),
@@ -44,7 +51,7 @@ class BiLSTMModel:
 
             (rnn_output_fw, rnn_output_bw), _ =  tf.nn.bidirectional_dynamic_rnn(cell_fw=forward_cell,
                                                                                  cell_bw=backward_cell,
-                                                                                 inputs=word_embedding,
+                                                                                 inputs=inputs,
                                                                                  sequence_length=self.lengths,
                                                                                  dtype=tf.float32)
             rnn_output = tf.concat([rnn_output_fw, rnn_output_bw], axis=2)
@@ -53,9 +60,9 @@ class BiLSTMModel:
             return np.sum([np.prod(v.get_shape().as_list()) for v in tf.trainable_variables()])
 
     def compute_predictions(self):
-        softmax_output = tf.nn.softmax(self.logits, name='softmax_output')
-        self.predictions = tf.argmax(softmax_output, axis=-1, name='predictions')
-
+        with tf.variable_scope('output'):
+            softmax_output = tf.nn.softmax(self.logits, name='softmax_output')
+            self.predictions = tf.argmax(softmax_output, axis=-1, name='predictions')
 
     def compute_loss(self, n_tags, PAD_index):
         # Create cross entropy function function (tf.nn.softmax_cross_entropy_with_logits_v2)
@@ -80,8 +87,9 @@ class BiLSTMModel:
         with tf.control_dependencies(tf.get_collection(tf.GraphKeys.UPDATE_OPS)):
             self.train_op = self.optimizer.apply_gradients(self.grads_and_vars, global_step=global_step)
 
-    def train_on_batch(self, session, step, words, chars, tags, lengths, learning_rate, dropout_keep_probability):
+    def train_on_batch(self, session, step, words, capfeats, tags, lengths, learning_rate, dropout_keep_probability):
         feed_dict = {self.word_batch: words,
+                     self.cap_feat_batch: capfeats,
                      self.ground_truth_tags: tags,
                      self.learning_rate_ph: learning_rate,
                      self.dropout_ph: dropout_keep_probability,
@@ -90,8 +98,9 @@ class BiLSTMModel:
         step,loss,_ = session.run([step, self.loss, self.train_op], feed_dict=feed_dict)
         return step,loss
 
-    def predict_for_batch(self, session, words, chars, lengths):
+    def predict_for_batch(self, session, words, cap_feats, lengths):
         predictions = session.run(self.predictions, feed_dict={self.word_batch: words,
+                                                               self.cap_feat_batch: cap_feats,
                                                                self.lengths: lengths})
 
         return predictions
@@ -99,7 +108,7 @@ class BiLSTMModel:
     def add_stats(self, scope_name='train'):
         with tf.variable_scope(scope_name) as scope:
             summaries = [
-                tf.summary.scalar('loss_mel', self.loss)
+                tf.summary.scalar('loss', self.loss)
             ]
 
             if scope_name == 'train':

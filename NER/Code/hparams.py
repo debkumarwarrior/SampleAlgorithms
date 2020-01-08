@@ -1,13 +1,9 @@
 import tensorflow as tf
 
 hparams = tf.contrib.training.HParams(
-    char_dims = 25,
-    char_lstm_dim = 25,
-    char_bidirect = True,
     word_dim = 100,
     word_lstm_dim = 100,
-    word_bidirect = True,
-    cap_dim = False,
+    cap_dim = 25,
     dropout = 0.5,
     lr_method = "sgd-lr_.005"
 )
