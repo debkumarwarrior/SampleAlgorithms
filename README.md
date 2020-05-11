@@ -11,4 +11,10 @@
 	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/1443.%20Minimum%20Time%20to%20Collect%20All%20Apples%20in%20a%20Tree/Source.cpp)
 	- [Sample Input](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/1443.%20Minimum%20Time%20to%20Collect%20All%20Apples%20in%20a%20Tree/input.txt)
 	- [Output](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/1443.%20Minimum%20Time%20to%20Collect%20All%20Apples%20in%20a%20Tree/output.txt)
+	
+3. Sudoku Solver	
+	- [Problem](https://leetcode.com/problems/sudoku-solver/)
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/37.%20Sudoku%20Solver/Source.cpp)
+	- [Sample Input](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/37.%20Sudoku%20Solver/input.txt)
+	- [Output](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/37.%20Sudoku%20Solver/output.txt)
 
