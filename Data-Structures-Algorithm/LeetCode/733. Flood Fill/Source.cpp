@@ -99,7 +99,7 @@ int main() {
 		cin >> sr >> sc >> newColor;
 		cout << "Updating pixel(" << sr << "," << sc << ") with [" << newColor << "]"<< endl;
 		soln.floodFill(image, sr, sc, newColor);
-		cout << "Original Image: " << endl;
+		cout << "Modified Image: " << endl;
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
 				cout << image[i][j] << " ";

@@ -3,7 +3,7 @@ Original Image:
 1 1 0 
 1 0 1 
 Updating pixel(1,1) with [2]
-Original Image: 
+Modified Image: 
 2 2 2 
 2 2 0 
 2 0 1 
@@ -11,6 +11,6 @@ Original Image:
 0 0 0 
 0 1 1 
 Updating pixel(1,1) with [1]
-Original Image: 
+Modified Image: 
 0 0 0 
 0 1 1 
