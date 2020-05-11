@@ -20,6 +20,6 @@
 
 4. Flood Fill
 	- [Problem](https://leetcode.com/problems/sudoku-solver/)
-	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/733.%20FLood%20Fill/Source.cpp)
-	- [Sample Input](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/733.%20FLood%20Fill/input.txt)
-	- [Output](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/733.%20FLood%20Fill/output.txt)
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/733.%20Flood%20Fill/Source.cpp)
+	- [Sample Input](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/733.%20Flood%20Fill/input.txt)
+	- [Output](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/733.%20Flood%20Fill/output.txt)
