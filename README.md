@@ -24,6 +24,11 @@
 	- [Sample Input](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/733.%20Flood%20Fill/input.txt)
 	- [Output](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/733.%20Flood%20Fill/output.txt)
 
-5. Flood Fill
+5. Binary Tree Level Order Traversal
 	- [Problem](https://leetcode.com/problems/binary-tree-level-order-traversal-ii/)
 	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/107.%20Binary%20Tree%20Level%20Order%20Traversal%20II/Source.cpp)
+
+6. Search in Rotated Sorted Array
+	- [Problem](https://leetcode.com/problems/search-in-rotated-sorted-array/)
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/33.%20Search%20in%20Rotated%20Sorted%20Array/Source.cpp]
+
