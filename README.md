@@ -30,7 +30,7 @@
 
 6. Search in Rotated Sorted Array
 	- [Problem](https://leetcode.com/problems/search-in-rotated-sorted-array/)
-	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/33.%20Search%20in%20Rotated%20Sorted%20Array/Source.cpp]
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/33.%20Search%20in%20Rotated%20Sorted%20Array/Source.cpp)
 
 7. Binary Tree Zigzag Level Order Traversal
 	- [Problem](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/)
