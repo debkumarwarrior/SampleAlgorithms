@@ -38,7 +38,7 @@
 
 8. LRU Cache
 	- [Problem](https://leetcode.com/problems/lru-cache/)
-	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/146.%20LRU%20Cache/Source.cpp)
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/146.%20LRU%20Cache/Solution.cpp)
 
 9. LFU Cache
 	- [Problem](https://leetcode.com/problems/lfu-cache/)
