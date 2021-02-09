@@ -43,3 +43,7 @@
 9. LFU Cache
 	- [Problem](https://leetcode.com/problems/lfu-cache/)
 	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/460.%20LFU%20Cache/Source.cpp)
+10. Binary Search Tree to Greater Sum Tree
+	- [Problem](https://leetcode.com/problems/binary-search-tree-to-greater-sum-tree/)
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/1038.%20Binary%20Search%20Tree%20to%20Greater%20Sum%20Tree/Source.cpp)
+
