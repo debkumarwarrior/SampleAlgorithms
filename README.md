@@ -48,5 +48,5 @@
 	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/1038.%20Binary%20Search%20Tree%20to%20Greater%20Sum%20Tree/Source.cpp)
 11. Copy List with Random Pointer
 	- [Problem](https://leetcode.com/problems/copy-list-with-random-pointer/)
-	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/https://leetcode.com/problems/138.%20Copy%20List%20with%20Random%20Pointer/Source.cpp)
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/138.%20Copy%20List%20with%20Random%20Pointer/Source.cpp)
 
