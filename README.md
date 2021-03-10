@@ -49,4 +49,10 @@
 11. Copy List with Random Pointer
 	- [Problem](https://leetcode.com/problems/copy-list-with-random-pointer/)
 	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/138.%20Copy%20List%20with%20Random%20Pointer/Source.cpp)
+12. Add One Row to Tree
+	- [Problem](https://leetcode.com/problems/add-one-row-to-tree/)
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/623.%20Add%20One%20Row%20to%20Tree/Source.cpp)
+13. Missing Number
+	- [Problem](https://leetcode.com/problems/missing-number/)
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/268.%20Missing%20Number/Source.cpp)
 
