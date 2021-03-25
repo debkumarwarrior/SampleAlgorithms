@@ -55,4 +55,13 @@
 13. Missing Number
 	- [Problem](https://leetcode.com/problems/missing-number/)
 	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/268.%20Missing%20Number/Source.cpp)
-
+14. Merge Intervals
+	- [Problem](https://leetcode.com/problems/merge-intervals/)
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/56.%20Merge%20Intervals/Source.cpp)
+	- [Sample Input](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/56.%20Merge%20Intervals/input.txt)
+	- [Output](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/56.%20Merge%20Intervals/output.txt)
+15. Insert Interval
+	- [Problem](https://leetcode.com/problems/insert-interval/)
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/57.%20Insert%20Interval/Source.cpp)
+	- [Sample Input](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/57.%20Insert%20Interval/input.txt)
+	- [Output](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/57.%20Insert%20Interval/output.txt)
