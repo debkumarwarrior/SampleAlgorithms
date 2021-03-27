@@ -1,0 +1,10 @@
+Input List : [ 1 2 3 4 5 ]
+Left : 2 Right : 4
+Output List : [ 1 4 3 2 5 ]
+
+
+Input List : [ 5 ]
+Left : 1 Right : 1
+Output List : [ 5 ]
+
+
