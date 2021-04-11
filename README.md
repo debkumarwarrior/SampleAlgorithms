@@ -71,6 +71,11 @@
 	- [Sample Input](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/92.%20Reverse%20Linked%20List%20II/input.txt)
 	- [Output](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/92.%20Reverse%20Linked%20List%20II/output.txt)
 17. Palindrome Linked List
-        - [Problem](https://leetcode.com/problems/palindrome-linked-list/)
-        - [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/234.%20Palindrome%20Linked%20List/Source.cpp)
+	- [Problem](https://leetcode.com/problems/palindrome-linked-list/)
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/234.%20Palindrome%20Linked%20List/Source.cpp)
+18. Longest Increasing Path in a Matrix
+	- [Problem](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/)
+	- [Solution](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/329.%20Longest%20Increasing%20Path%20in%20a%20Matrix/Source.cpp)
+	- [Sample Input](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/329.%20Longest%20Increasing%20Path%20in%20a%20Matrix/input.txt)
+	- [Output](https://github.com/debkumarwarrior/SampleAlgorithms/tree/master/Data-Structures-Algorithm/LeetCode/329.%20Longest%20Increasing%20Path%20in%20a%20Matrix/output.txt)
 
